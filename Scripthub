@@ -22,6 +22,7 @@ local eggToPets = {
     ["Bee Egg"]        = {"Bee", "Honey Bee", "Bear Bee", "Petal Bee", "Queen Bee"},
     ["Paradise Egg"]   = {"Ostrich", "Peacock", "Capybara", "Scarlet Macaw", "Mimic Octopus"},
     ["Oasis Egg"]      = {"Meerkat", "Sand Snake", "Axolotl", "Hyacinth Macaw"},
+    ["Enchanted Egg"] = {"Ladybug", "Pixie", "Imp", "Glimmering Sprite", "Cockatrice"},
 }
 
 -- ✅ Holds all created ESP GUIs
